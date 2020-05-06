@@ -1,0 +1,28 @@
+"""
+Definitions of the Invoke tasks for the project
+"""
+
+import os
+from invoke import task
+
+
+@task
+def run_app(contex):
+    """
+    Execute the application
+    """
+    contex.run("python app/main.py")
+
+
+@task
+def generate_ui(context):
+    """
+    Generate python files based on the UI templates
+    """
+    os.chdir(os.getcwd())
+    for ui_file in os.listdir('./app/ui/forms'):
+        if not ui_file.endswith('.ui'):
+            continue
+        py_file = ui_file.replace('.ui', '.py')
+        print("convert {} to {}".format(ui_file, py_file))
+        context.run("pipenv run pyside2-uic app\\ui\\forms\\{} -o app\\ui\\forms\\{}".format(ui_file, py_file))
