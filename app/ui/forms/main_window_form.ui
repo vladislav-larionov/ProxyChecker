@@ -248,8 +248,8 @@
   </widget>
   <action name="home_directory">
    <property name="icon">
-    <iconset>
-     <normaloff>../../resources/Folder.ico</normaloff>../../resources/Folder.ico</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/resources/Folder.ico</normaloff>:/resources/resources/Folder.ico</iconset>
    </property>
    <property name="text">
     <string>Home directory</string>
@@ -263,6 +263,8 @@
    <header>ui/forms/drag_button</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

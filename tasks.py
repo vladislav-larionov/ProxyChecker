@@ -25,4 +25,11 @@ def generate_ui(context):
             continue
         py_file = ui_file.replace('.ui', '.py')
         print("convert {} to {}".format(ui_file, py_file))
-        context.run("pipenv run pyside2-uic app\\ui\\forms\\{} -o app\\ui\\forms\\{}".format(ui_file, py_file))
+        context.run("pipenv run pyside2-uic --from-imports app/ui/forms/{} -o app/ui/forms/{}".format(ui_file, py_file))
+
+    for ui_file in os.listdir('./app/ui/forms'):
+        if not ui_file.endswith('.qrc'):
+            continue
+        py_file = ui_file.replace('.qrc', '_rc.py')
+        print("convert {} to {}".format(ui_file, py_file))
+        context.run("pipenv run pyside2-rcc app/ui/forms/{} -o  app/ui/forms/{}".format(ui_file, py_file))

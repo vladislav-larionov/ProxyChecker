@@ -17,6 +17,7 @@ from PySide2.QtWidgets import *
 
 from ui.forms.drag_button import DragButton
 
+from  . import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -28,7 +29,7 @@ class Ui_MainWindow(object):
         self.home_directory = QAction(MainWindow)
         self.home_directory.setObjectName(u"home_directory")
         icon = QIcon()
-        icon.addFile(u"../../resources/Folder.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/resources/resources/Folder.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.home_directory.setIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
