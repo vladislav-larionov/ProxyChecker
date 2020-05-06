@@ -39,15 +39,15 @@ class Ui_MainWindow(object):
         self.url_setting = QHBoxLayout(self.layoutWidget1)
         self.url_setting.setObjectName(u"url_setting")
         self.url_setting.setContentsMargins(0, 0, 0, 0)
-        self.url = QLabel(self.layoutWidget1)
-        self.url.setObjectName(u"url")
-
-        self.url_setting.addWidget(self.url)
-
         self.url_field = QLineEdit(self.layoutWidget1)
         self.url_field.setObjectName(u"url_field")
 
         self.url_setting.addWidget(self.url_field)
+
+        self.url = QLabel(self.layoutWidget1)
+        self.url.setObjectName(u"url")
+
+        self.url_setting.addWidget(self.url)
 
         self.layoutWidget2 = QWidget(self.centralwidget)
         self.layoutWidget2.setObjectName(u"layoutWidget2")
@@ -183,8 +183,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"ProxyChecker", None))
         self.home_directory.setText(QCoreApplication.translate("MainWindow", u"Home directory", None))
-        self.url.setText(QCoreApplication.translate("MainWindow", u"URL:", None))
         self.url_field.setText(QCoreApplication.translate("MainWindow", u"https://mail.ru", None))
+        self.url.setText(QCoreApplication.translate("MainWindow", u"URL:", None))
         self.reset_button.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
         self.stop_btn.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.start_btn.setText(QCoreApplication.translate("MainWindow", u"Start", None))

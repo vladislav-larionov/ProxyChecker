@@ -31,16 +31,16 @@
     </property>
     <layout class="QHBoxLayout" name="url_setting">
      <item>
-      <widget class="QLabel" name="url">
+      <widget class="QLineEdit" name="url_field">
        <property name="text">
-        <string>URL:</string>
+        <string>https://mail.ru</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="url_field">
+      <widget class="QLabel" name="url">
        <property name="text">
-        <string>https://mail.ru</string>
+        <string>URL:</string>
        </property>
       </widget>
      </item>
