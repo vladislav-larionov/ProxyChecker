@@ -109,29 +109,34 @@ class Ui_MainWindow(object):
 
         self.gridLayoutWidget = QWidget(self.centralwidget)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
-        self.gridLayoutWidget.setGeometry(QRect(20, 140, 191, 91))
+        self.gridLayoutWidget.setGeometry(QRect(20, 140, 191, 102))
         self.gridLayout = QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.import_socks5 = DragButton(self.gridLayoutWidget)
-        self.import_socks5.setObjectName(u"import_socks5")
-
-        self.gridLayout.addWidget(self.import_socks5, 2, 2, 1, 1)
-
         self.import_socks4 = DragButton(self.gridLayoutWidget)
         self.import_socks4.setObjectName(u"import_socks4")
 
         self.gridLayout.addWidget(self.import_socks4, 1, 2, 1, 1)
+
+        self.clear_http = QPushButton(self.gridLayoutWidget)
+        self.clear_http.setObjectName(u"clear_http")
+
+        self.gridLayout.addWidget(self.clear_http, 0, 1, 1, 1)
+
+        self.import_socks5 = DragButton(self.gridLayoutWidget)
+        self.import_socks5.setObjectName(u"import_socks5")
+
+        self.gridLayout.addWidget(self.import_socks5, 2, 2, 1, 1)
 
         self.import_http = DragButton(self.gridLayoutWidget)
         self.import_http.setObjectName(u"import_http")
 
         self.gridLayout.addWidget(self.import_http, 0, 2, 1, 1)
 
-        self.clear_http = QPushButton(self.gridLayoutWidget)
-        self.clear_http.setObjectName(u"clear_http")
+        self.http_count = QLabel(self.gridLayoutWidget)
+        self.http_count.setObjectName(u"http_count")
 
-        self.gridLayout.addWidget(self.clear_http, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.http_count, 0, 0, 1, 1)
 
         self.clear_socks4 = QPushButton(self.gridLayoutWidget)
         self.clear_socks4.setObjectName(u"clear_socks4")
@@ -143,20 +148,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.clear_socks5, 2, 1, 1, 1)
 
-        self.http_count = QLabel(self.gridLayoutWidget)
-        self.http_count.setObjectName(u"http_count")
+        self.socks4_count = QLabel(self.gridLayoutWidget)
+        self.socks4_count.setObjectName(u"socks4_count")
 
-        self.gridLayout.addWidget(self.http_count, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.socks4_count, 1, 0, 1, 1)
 
         self.socks5_count = QLabel(self.gridLayoutWidget)
         self.socks5_count.setObjectName(u"socks5_count")
 
-        self.gridLayout.addWidget(self.socks5_count, 1, 0, 1, 1)
-
-        self.socks4_count = QLabel(self.gridLayoutWidget)
-        self.socks4_count.setObjectName(u"socks4_count")
-
-        self.gridLayout.addWidget(self.socks4_count, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.socks5_count, 2, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusBar = QStatusBar(MainWindow)
@@ -193,16 +193,16 @@ class Ui_MainWindow(object):
         self.good_http.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"http:", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"socks4", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"socks4", None))
-        self.import_socks5.setText(QCoreApplication.translate("MainWindow", u"SOCKS5", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"socks5", None))
         self.import_socks4.setText(QCoreApplication.translate("MainWindow", u"SOCKS4", None))
-        self.import_http.setText(QCoreApplication.translate("MainWindow", u"HTTP", None))
         self.clear_http.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
+        self.import_socks5.setText(QCoreApplication.translate("MainWindow", u"SOCKS5", None))
+        self.import_http.setText(QCoreApplication.translate("MainWindow", u"HTTP", None))
+        self.http_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.clear_socks4.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
         self.clear_socks5.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
-        self.http_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.socks5_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.socks4_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.socks5_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 

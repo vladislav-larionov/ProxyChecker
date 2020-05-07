@@ -130,7 +130,7 @@
      <item row="2" column="2">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>socks4</string>
+        <string>socks5</string>
        </property>
       </widget>
      </item>
@@ -142,21 +142,28 @@
       <x>20</x>
       <y>140</y>
       <width>191</width>
-      <height>91</height>
+      <height>102</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="2">
-      <widget class="DragButton" name="import_socks5">
-       <property name="text">
-        <string>SOCKS5</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="DragButton" name="import_socks4">
        <property name="text">
         <string>SOCKS4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="clear_http">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="DragButton" name="import_socks5">
+       <property name="text">
+        <string>SOCKS5</string>
        </property>
       </widget>
      </item>
@@ -167,10 +174,10 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="clear_http">
+     <item row="0" column="0">
+      <widget class="QLabel" name="http_count">
        <property name="text">
-        <string>Clear</string>
+        <string>0</string>
        </property>
       </widget>
      </item>
@@ -188,22 +195,15 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="http_count">
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="socks5_count">
+      <widget class="QLabel" name="socks4_count">
        <property name="text">
         <string>0</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="socks4_count">
+      <widget class="QLabel" name="socks5_count">
        <property name="text">
         <string>0</string>
        </property>

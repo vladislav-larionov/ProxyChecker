@@ -5,6 +5,7 @@ from PySide2.QtCore import QObject, Signal, QThread
 
 class ProxyCheckerConnection(QObject):
     valid_proxy_signal = Signal(int, int, int)
+    checked_signal = Signal(int, int)
     done_signal = Signal()
 
 
@@ -30,6 +31,7 @@ class ProxyChecker(QThread):
             'socks5': open("socks5.txt", "w"),
             'http': open("http.txt", "w")
         }
+        self.__checked_count = 0
 
     @classmethod
     def __proxy_list_to_hash_list(cls, proxies, proxy_type):
@@ -37,6 +39,8 @@ class ProxyChecker(QThread):
 
     def start_check(self):
         for proxy in self.__proxies:
+            self.__checked_count += 1
+            self.signals.checked_signal.emit(self.__checked_count, len(self.__proxies))
             if True:
                 self.__good_proxy_counts[proxy['type']] += 1
                 self.__write_to_file(proxy)

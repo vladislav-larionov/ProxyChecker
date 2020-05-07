@@ -118,6 +118,7 @@ class MainWindow(QMainWindow):
         )
         self.__proxy_checker.signals.valid_proxy_signal.connect(self.update_statistics)
         self.__proxy_checker.signals.done_signal.connect(self.set_stop_mode)
+        self.__proxy_checker.signals.checked_signal.connect(self.increment_progress)
         self.__proxy_checker.start()
 
     @Slot(int, int, int)
@@ -134,6 +135,10 @@ class MainWindow(QMainWindow):
 
     def __get_url(self):
         return self.main_window_ui.url_field.text()
+
+    @Slot(int, int)
+    def increment_progress(self, passed, total):
+        self.main_window_ui.statusBar.showMessage("{} / {}".format(passed, total))
 
     @Slot()
     def set_stop_mode(self):
@@ -157,5 +162,6 @@ class MainWindow(QMainWindow):
         self.imported_http.clear()
         self.update_statistics(0, 0, 0)
         self.update_imported_count()
+        self.main_window_ui.statusBar.showMessage("")
 
 
