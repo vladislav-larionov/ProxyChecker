@@ -2,10 +2,11 @@ import time
 
 from PySide2.QtCore import QObject, Signal, QThread
 
+from lib.proxy_checker_statistics import ProxyCheckerStatistics
+from lib.request import Request
+
 
 class ProxyCheckerConnection(QObject):
-    valid_proxy_signal = Signal(int, int, int)
-    checked_signal = Signal(int, int)
     done_signal = Signal()
 
 
@@ -25,13 +26,16 @@ class ProxyChecker(QThread):
         self.__proxies.extend(self.__proxy_list_to_hash_list(socks5_proxies, 'socks5'))
         self.__proxies.extend(self.__proxy_list_to_hash_list(socks4_proxies, 'socks4'))
         self.__proxies.extend(self.__proxy_list_to_hash_list(http_proxies, 'http'))
-        self.__good_proxy_counts = {'socks4': 0, 'socks5': 0, 'http': 0}
+        self.__statistics = ProxyCheckerStatistics(len(self.__proxies))
         self.__good_proxies_files = {
             'socks4': open("socks4.txt", "w"),
             'socks5': open("socks5.txt", "w"),
             'http': open("http.txt", "w")
         }
-        self.__checked_count = 0
+
+    @property
+    def statistics(self):
+        return self.__statistics
 
     @classmethod
     def __proxy_list_to_hash_list(cls, proxies, proxy_type):
@@ -39,16 +43,12 @@ class ProxyChecker(QThread):
 
     def start_check(self):
         for proxy in self.__proxies:
-            self.__checked_count += 1
-            self.signals.checked_signal.emit(self.__checked_count, len(self.__proxies))
+            self.__statistics.increase_passed()
             if True:
-                self.__good_proxy_counts[proxy['type']] += 1
+                self.__statistics.increase_good(proxy['type'])
                 self.__write_to_file(proxy)
-                self.signals.valid_proxy_signal.emit(
-                    self.__good_proxy_counts['http'],
-                    self.__good_proxy_counts['socks4'],
-                    self.__good_proxy_counts['socks5']
-                )
+            else:
+                self.__statistics.increase_bad()
 
     @classmethod
     def __write_to_file(cls, proxy):

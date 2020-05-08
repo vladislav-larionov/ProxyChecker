@@ -8,6 +8,7 @@ from PySide2.QtCore import Slot, SIGNAL
 from PySide2.QtWidgets import QMainWindow, QFileDialog
 
 from lib.proxy_checker import ProxyChecker
+from lib.proxy_checker_statistics import ProxyCheckerStatistics
 from ui.forms.main_window_form import Ui_MainWindow
 
 
@@ -106,6 +107,10 @@ class MainWindow(QMainWindow):
         self.main_window_ui.http_count.setText(str(len(self.imported_http)))
         self.main_window_ui.socks4_count.setText(str(len(self.imported_socks4)))
         self.main_window_ui.socks5_count.setText(str(len(self.imported_socks5)))
+        self.main_window_ui.total_proxy_loaded.setText(str(int(self.__compute_total_proxy_loaded())))
+
+    def __compute_total_proxy_loaded(self):
+        return len(self.imported_http) + len(self.imported_socks4) + len(self.imported_socks5)
 
     @Slot()
     def start_check(self):
@@ -116,16 +121,29 @@ class MainWindow(QMainWindow):
             socks5_proxies=self.imported_socks5,
             http_proxies=self.imported_http
         )
-        self.__proxy_checker.signals.valid_proxy_signal.connect(self.update_statistics)
-        self.__proxy_checker.signals.done_signal.connect(self.set_stop_mode)
-        self.__proxy_checker.signals.checked_signal.connect(self.increment_progress)
+        self.update_statistics(self.__proxy_checker.statistics)
+        self.__proxy_checker.statistics.update_statistics_signal.connect(self.update_statistics)
+        self.__proxy_checker.signals.done_signal.connect(self.stop_check)
         self.__proxy_checker.start()
 
-    @Slot(int, int, int)
-    def update_statistics(self, http_count, socks4_count, socks5_count):
-        self.main_window_ui.good_http.setText(str(http_count))
-        self.main_window_ui.good_socks4.setText(str(socks4_count))
-        self.main_window_ui.good_socks5.setText(str(socks5_count))
+
+    @Slot(object)
+    def update_statistics(self, statistics: ProxyCheckerStatistics):
+        self.main_window_ui.good_http.setText(str(statistics.good_http()))
+        self.main_window_ui.good_socks4.setText(str(statistics.good_socks4()))
+        self.main_window_ui.good_socks5.setText(str(statistics.good_socks5()))
+        self.main_window_ui.total_bad_proxy.setText(str(statistics.bad_proxy()))
+        self.main_window_ui.total_good_proxy.setText(str(statistics.good_proxy()))
+        self.update_progress_bar(statistics)
+
+    def update_progress_bar(self, statistics: ProxyCheckerStatistics):
+        self.main_window_ui.progressBar.setMaximum(statistics.total())
+        self.main_window_ui.progressBar.setValue(statistics.passed())
+        self.main_window_ui.progressBar.setFormat('{}% ({} / {})'.format(
+            str(statistics.progress_in_percent()),
+            str(statistics.passed()),
+            str(statistics.total())
+        ))
 
     @Slot()
     def stop_check(self):
@@ -135,14 +153,6 @@ class MainWindow(QMainWindow):
 
     def __get_url(self):
         return self.main_window_ui.url_field.text()
-
-    @Slot(int, int)
-    def increment_progress(self, passed, total):
-        self.main_window_ui.statusBar.showMessage("{} / {}".format(passed, total))
-
-    @Slot()
-    def set_stop_mode(self):
-        self.__set_start_mode(False)
 
     def __set_start_mode(self, value: bool):
         self.main_window_ui.start_btn.setEnabled(not value)
@@ -154,14 +164,17 @@ class MainWindow(QMainWindow):
         self.main_window_ui.clear_socks4.setEnabled(not value)
         self.main_window_ui.clear_socks5.setEnabled(not value)
         self.main_window_ui.reset_button.setEnabled(not value)
+        self.main_window_ui.url_field.setEnabled(not value)
 
     @Slot()
     def reset(self):
         self.imported_socks5.clear()
         self.imported_socks4.clear()
         self.imported_http.clear()
-        self.update_statistics(0, 0, 0)
+        self.update_statistics(ProxyCheckerStatistics())
         self.update_imported_count()
-        self.main_window_ui.statusBar.showMessage("")
+        self.main_window_ui.progressBar.setFormat("")
+        self.main_window_ui.progressBar.setValue(0)
+        self.main_window_ui.progressBar.setMaximum(1)
 
 
