@@ -25,7 +25,7 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="main_widget">
    <widget class="QWidget" name="layoutWidget1">
     <property name="geometry">
      <rect>
@@ -404,7 +404,7 @@
       <height>61</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="control_pane">
      <item>
       <widget class="QPushButton" name="start_btn">
        <property name="text">
@@ -413,7 +413,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="contol_layout">
        <item>
         <widget class="QPushButton" name="reset_button">
          <property name="text">
@@ -444,36 +444,78 @@
       <height>22</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="settings_layout">
      <item>
-      <widget class="QLineEdit" name="timeout">
-       <property name="toolTip">
-        <string>timeout</string>
+      <widget class="QDoubleSpinBox" name="timeout">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
-       <property name="toolTipDuration">
-        <number>1</number>
-       </property>
-       <property name="text">
-        <string>1</string>
+       <property name="frame">
+        <bool>true</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
-       <property name="placeholderText">
-        <string/>
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="accelerated">
+        <bool>false</bool>
+       </property>
+       <property name="keyboardTracking">
+        <bool>true</bool>
+       </property>
+       <property name="showGroupSeparator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="minimum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>100.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="thread_count">
-       <property name="toolTip">
-        <string>thread</string>
+      <widget class="QDoubleSpinBox" name="thread_count">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
-       <property name="text">
-        <string>100</string>
+       <property name="frame">
+        <bool>true</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="accelerated">
+        <bool>false</bool>
+       </property>
+       <property name="keyboardTracking">
+        <bool>true</bool>
+       </property>
+       <property name="showGroupSeparator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="minimum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>250.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>100.000000000000000</double>
        </property>
       </widget>
      </item>

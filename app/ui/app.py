@@ -119,13 +119,20 @@ class MainWindow(QMainWindow):
             url=self.__get_url(),
             socks4_proxies=self.imported_socks4,
             socks5_proxies=self.imported_socks5,
-            http_proxies=self.imported_http
+            http_proxies=self.imported_http,
+            timeout=self.__timeout(),
+            threads=self.__threads()
         )
         self.update_statistics(self.__proxy_checker.statistics)
         self.__proxy_checker.statistics.update_statistics_signal.connect(self.update_statistics)
-        self.__proxy_checker.signals.done_signal.connect(self.stop_check)
+        self.__proxy_checker.signals.done_signal.connect(self.done_check)
         self.__proxy_checker.start()
 
+    def __timeout(self):
+        return int(self.main_window_ui.timeout.text())
+
+    def __threads(self):
+        return int(self.main_window_ui.thread_count.text())
 
     @Slot(object)
     def update_statistics(self, statistics: ProxyCheckerStatistics):
@@ -146,10 +153,13 @@ class MainWindow(QMainWindow):
         ))
 
     @Slot()
-    def stop_check(self):
-        self.__proxy_checker.terminate()
-        self.__proxy_checker.wait()
+    def done_check(self):
         self.__set_start_mode(False)
+
+    @Slot()
+    def stop_check(self):
+        self.main_window_ui.stop_btn.setEnabled(False)
+        self.__proxy_checker.stop()
 
     def __get_url(self):
         return self.main_window_ui.url_field.text()
@@ -164,6 +174,8 @@ class MainWindow(QMainWindow):
         self.main_window_ui.clear_socks4.setEnabled(not value)
         self.main_window_ui.clear_socks5.setEnabled(not value)
         self.main_window_ui.reset_button.setEnabled(not value)
+        self.main_window_ui.timeout.setEnabled(not value)
+        self.main_window_ui.thread_count.setEnabled(not value)
         self.main_window_ui.url_field.setEnabled(not value)
 
     @Slot()
@@ -173,7 +185,7 @@ class MainWindow(QMainWindow):
         self.imported_http.clear()
         self.update_statistics(ProxyCheckerStatistics())
         self.update_imported_count()
-        self.main_window_ui.progressBar.setFormat("")
+        self.main_window_ui.progressBar.setFormat("0%")
         self.main_window_ui.progressBar.setValue(0)
         self.main_window_ui.progressBar.setMaximum(1)
 
