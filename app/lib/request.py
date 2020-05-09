@@ -3,12 +3,6 @@ import requests
 from requests import ConnectTimeout, ReadTimeout, ConnectionError
 from requests.exceptions import ProxyError, ChunkedEncodingError
 
-# from urllib3 import disable_warnings, exceptions
-#
-# disable_warnings(exceptions.InsecureRequestWarning)
-from socks import GeneralProxyError
-from urllib3.exceptions import MaxRetryError
-
 
 class Request:
     def __init__(self, url, proxy=None, timeout=3):
@@ -30,13 +24,10 @@ class Request:
         try:
             self.__response = requests.get(self.__url, proxies=self.__proxy, timeout=self.__timeout,
                                            headers=self.__headers)
-            print(self.__response.status_code)
             return self.__response.ok
         except (ConnectTimeout, ReadTimeout, ProxyError, ConnectionError) as e:
-            print("{}, error: {}".format(self.__proxy, type(e)))
             return False
         except ChunkedEncodingError as e:
-            print("{}, error: {}".format(self.__proxy, type(e)))
             return False
 
     @classmethod
@@ -45,11 +36,3 @@ class Request:
             'http': '{}://{}'.format(proxy['type'], proxy["proxy"]),
             'https': '{}://{}'.format(proxy['type'], proxy["proxy"])
         }
-
-# responce = Request(
-#     url='https://mail.ru',
-#     proxy={'type': 'http', 'proxy': '94.130.179.24:8045'}
-# ).do_request()
-#
-# # proxy = {'http': 'http://185.59.213.253:8081', 'https': 'https://185.59.213.253:8081'}
-# print(responce)

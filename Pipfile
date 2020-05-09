@@ -11,7 +11,7 @@ rope = "*"
 
 [packages]
 pyside2 = "*"
-requests = "*"
+requests = {extras = ["socks"],version = "*"}
 
 [requires]
 python_version = "3"

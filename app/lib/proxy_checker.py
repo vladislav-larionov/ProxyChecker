@@ -53,7 +53,7 @@ class ProxyChecker(QThread):
                 self.__futures.append(self.__thread_pool.submit(self.__check_proxy, proxy))
 
     def __check_proxy(self, proxy):
-        if True:
+        if Request(url=self.__url, proxy=proxy, timeout=self.__timeout).do_request():
             self.__statistics.increase_good(proxy['type'])
             self.__write_to_file(proxy)
         else:

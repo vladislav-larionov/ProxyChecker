@@ -211,7 +211,7 @@ class Ui_MainWindow(object):
         self.timeout.setDecimals(0)
         self.timeout.setMinimum(1.000000000000000)
         self.timeout.setMaximum(100.000000000000000)
-        self.timeout.setValue(1.000000000000000)
+        self.timeout.setValue(5.000000000000000)
 
         self.settings_layout.addWidget(self.timeout)
 
