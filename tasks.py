@@ -33,3 +33,11 @@ def generate_ui(context):
         py_file = ui_file.replace('.qrc', '_rc.py')
         print("convert {} to {}".format(ui_file, py_file))
         context.run("pipenv run pyside2-rcc app/ui/forms/{} -o  app/ui/forms/{}".format(ui_file, py_file))
+
+@task
+def generate_exe(context):
+    """
+    Generate exe file based on the app/main.py
+    """
+    os.chdir(os.getcwd())
+    context.run("pipenv run pyinstaller --onefile -w app/main.py --name {}".format("ProxyChecker"))

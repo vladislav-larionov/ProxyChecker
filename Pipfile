@@ -12,6 +12,8 @@ rope = "*"
 [packages]
 pyside2 = "*"
 requests = {extras = ["socks"],version = "*"}
+pypiwin32 = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3"
