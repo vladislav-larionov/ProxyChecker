@@ -1,5 +1,8 @@
+import os
+from datetime import datetime
 from concurrent.futures import wait
 from concurrent.futures.thread import ThreadPoolExecutor
+from os.path import normpath, join
 
 from PySide2.QtCore import QObject, Signal, QThread
 
@@ -22,16 +25,22 @@ class ProxyChecker(QThread):
         self.__thread_pool = ThreadPoolExecutor(max_workers=threads)
         self.__futures = list()
         self.__proxies = proxy_storage.to_hash_list()
-        self.__statistics = ProxyCheckerStatistics(len(self.__proxies))
-        self.__good_proxies_files = {
-            'socks4': open("socks4.txt", "w"),
-            'socks5': open("socks5.txt", "w"),
-            'http': open("http.txt", "w")
-        }
+        self.__statistics = ProxyCheckerStatistics(proxy_storage.total())
+        self.__project_path = self.__create_project_directory()
+
+    @classmethod
+    def __create_project_directory(cls):
+        project_path = normpath(join(os.getcwd(), datetime.now().strftime('Project [%d_%m_%Y]/Results [%H_%M_%S]')))
+        os.makedirs(project_path)
+        return project_path
 
     @property
     def statistics(self):
         return self.__statistics
+
+    @property
+    def project_path(self):
+        return self.__project_path
 
     @classmethod
     def __proxy_list_to_hash_list(cls, proxies, proxy_type):
@@ -50,9 +59,9 @@ class ProxyChecker(QThread):
             self.__statistics.increase_bad()
         self.__statistics.increase_passed()
 
-    @classmethod
-    def __write_to_file(cls, proxy):
-        with open("{proxy_type}.txt".format(proxy_type=proxy['type']), "a") as proxy_file:
+    def __write_to_file(self, proxy):
+        with open("{project_path}\{proxy_type}.txt".format(project_path=self.project_path, proxy_type=proxy['type']),
+                  "a") as proxy_file:
             proxy_file.write(proxy['proxy'])
             proxy_file.write("\n")
 

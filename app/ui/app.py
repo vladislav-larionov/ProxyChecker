@@ -37,7 +37,10 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def open_home_directory(self):
-        os.startfile(os.getcwd())
+        if self.__proxy_checker is None:
+            os.startfile(os.getcwd())
+        else:
+            os.startfile(self.__proxy_checker.project_path)
 
     def __init__(self):
         """ Constructor of widget """
@@ -155,6 +158,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def reset(self):
+        self.__proxy_checker = None
         self.__proxy_storage.clear()
         self.update_progress_statistics(ProxyCheckerStatistics())
         self.main_window_ui.progressBar.setFormat("0%")
