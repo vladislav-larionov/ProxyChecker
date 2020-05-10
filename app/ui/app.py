@@ -67,7 +67,10 @@ class MainWindow(QMainWindow):
 
     def __open_proxy_file_dialog(self):
         file_name = QFileDialog.getOpenFileName(self, dir=self.tr("./"), filter=self.tr("*.txt"))
-        return file_name[0]
+        if file_name[0]:
+            return file_name[0]
+        else:
+            return None
 
     @Slot(object)
     def import_http_form_drag_and_drop(self, proxy_file):

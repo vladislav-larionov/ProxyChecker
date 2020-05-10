@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
 
         self.layoutWidget4 = QWidget(self.main_widget)
         self.layoutWidget4.setObjectName(u"layoutWidget4")
-        self.layoutWidget4.setGeometry(QRect(270, 150, 151, 91))
+        self.layoutWidget4.setGeometry(QRect(270, 120, 151, 91))
         self.statistic = QGridLayout(self.layoutWidget4)
         self.statistic.setObjectName(u"statistic")
         self.statistic.setContentsMargins(0, 0, 0, 0)
@@ -156,7 +156,7 @@ class Ui_MainWindow(object):
         self.progressBar = QProgressBar(self.main_widget)
         self.progressBar.setObjectName(u"progressBar")
         self.progressBar.setEnabled(False)
-        self.progressBar.setGeometry(QRect(270, 120, 151, 23))
+        self.progressBar.setGeometry(QRect(270, 220, 151, 23))
         self.progressBar.setLayoutDirection(Qt.LeftToRight)
         self.progressBar.setAutoFillBackground(False)
         self.progressBar.setMinimum(0)
