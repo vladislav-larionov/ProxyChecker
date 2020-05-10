@@ -21,6 +21,5 @@ class DragButton(QPushButton):
             e.ignore()
 
     def dropEvent(self, e: QDropEvent):
-        with open(e.mimeData().text().replace("file:///", ''), "r", encoding='utf8') as file:
-            self.signals.file_dropped.emit(set(file.readlines()))
+        self.signals.file_dropped.emit(e.mimeData().text().replace("file:///", ''))
 
