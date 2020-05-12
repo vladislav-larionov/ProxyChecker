@@ -1,5 +1,5 @@
-pyside2-uic preview_document_window_form.ui > preview_document_window_form.py
+to run
 
-pipenv run inv check-code
-
+pip install pipenv
+pipenv install
 pipenv run inv run-app
