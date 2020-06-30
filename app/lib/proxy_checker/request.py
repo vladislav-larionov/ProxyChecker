@@ -1,7 +1,7 @@
 import requests
 
 from requests import ConnectTimeout, ReadTimeout, ConnectionError
-from requests.exceptions import ProxyError, ChunkedEncodingError
+from requests.exceptions import ProxyError, ChunkedEncodingError, MissingSchema
 
 
 class Request:
@@ -25,9 +25,11 @@ class Request:
             self.__response = requests.get(self.__url, proxies=self.__proxy, timeout=self.__timeout,
                                            headers=self.__headers)
             return self.__response.ok
-        except (ConnectTimeout, ReadTimeout, ProxyError, ConnectionError) as e:
+        except (ConnectTimeout, ReadTimeout, ProxyError, ConnectionError) as _e:
             return False
-        except ChunkedEncodingError as e:
+        except ChunkedEncodingError as _e:
+            return False
+        except MissingSchema as _e:
             return False
 
     @classmethod

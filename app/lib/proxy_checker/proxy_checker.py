@@ -18,7 +18,7 @@ class ProxyCheckerConnection(QObject):
 class ProxyChecker(QThread):
     signals = ProxyCheckerConnection()
 
-    def __init__(self, proxy_storage: ProxyStorage, url="https://mail.ru", timeout=1, threads=1):
+    def __init__(self, proxy_storage: ProxyStorage, url, timeout=1, threads=1):
         super().__init__()
         self.__url = url
         self.__timeout = timeout
