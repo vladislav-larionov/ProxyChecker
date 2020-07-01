@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         if self.__proxy_checker is None:
             os.startfile(os.getcwd())
         else:
-            os.startfile(self.__proxy_checker.project_path)
+            os.startfile(self.__proxy_checker.project_path())
 
     def __init__(self):
         """ Constructor of widget """

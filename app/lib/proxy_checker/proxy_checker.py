@@ -1,12 +1,10 @@
-import os
-from datetime import datetime
 from concurrent.futures import wait
 from concurrent.futures.thread import ThreadPoolExecutor
-from os.path import normpath, join
 
 from PySide2.QtCore import QObject, Signal, QThread
 
 from lib.proxy.proxy import Proxy
+from lib.proxy_checker.project import Project
 from lib.proxy_checker.proxy_checker_statistics import ProxyCheckerStatistics
 from lib.proxy_checker.request import Request
 from lib.proxy_storage.proxy_storage import ProxyStorage
@@ -27,21 +25,14 @@ class ProxyChecker(QThread):
         self.__futures = list()
         self.__proxy_storage = proxy_storage
         self.__statistics = ProxyCheckerStatistics(proxy_storage.total())
-        self.__project_path = self.__create_project_directory()
-
-    @classmethod
-    def __create_project_directory(cls):
-        project_path = normpath(join(os.getcwd(), datetime.now().strftime('Project [%d_%m_%Y]/Results [%H_%M_%S]')))
-        os.makedirs(project_path)
-        return project_path
+        self.__project = Project()
 
     @property
     def statistics(self):
         return self.__statistics
 
-    @property
     def project_path(self):
-        return self.__project_path
+        return self.__project.project_path
 
     def __start_check(self):
         with self.__thread_pool:
@@ -51,16 +42,10 @@ class ProxyChecker(QThread):
     def __check_proxy(self, proxy: Proxy):
         if Request(url=self.__url, proxy=proxy, timeout=self.__timeout).do_request():
             self.__statistics.increase_good(proxy.proxy_type)
-            self.__write_to_file(proxy)
+            self.__project.store_good_proxy(proxy)
         else:
             self.__statistics.increase_bad()
         self.__statistics.increase_passed()
-
-    def __write_to_file(self, proxy: Proxy):
-        with open("{project_path}\{proxy_type}.txt".format(project_path=self.project_path, proxy_type=proxy.proxy_type),
-                  "a") as proxy_file:
-            proxy_file.write(str(proxy))
-            proxy_file.write("\n")
 
     def run(self):
         self.__start_check()
