@@ -6,6 +6,7 @@ from os.path import normpath, join
 
 from PySide2.QtCore import QObject, Signal, QThread
 
+from lib.proxy.proxy import Proxy
 from lib.proxy_checker.proxy_checker_statistics import ProxyCheckerStatistics
 from lib.proxy_checker.request import Request
 from lib.proxy_storage.proxy_storage import ProxyStorage
@@ -21,10 +22,10 @@ class ProxyChecker(QThread):
     def __init__(self, proxy_storage: ProxyStorage, url, timeout=1, threads=1):
         super().__init__()
         self.__url = url
-        self.__timeout = timeout
-        self.__thread_pool = ThreadPoolExecutor(max_workers=threads)
+        self.__timeout = int(timeout)
+        self.__thread_pool = ThreadPoolExecutor(max_workers=int(threads))
         self.__futures = list()
-        self.__proxies = proxy_storage.to_hash_list()
+        self.__proxy_storage = proxy_storage
         self.__statistics = ProxyCheckerStatistics(proxy_storage.total())
         self.__project_path = self.__create_project_directory()
 
@@ -42,27 +43,23 @@ class ProxyChecker(QThread):
     def project_path(self):
         return self.__project_path
 
-    @classmethod
-    def __proxy_list_to_hash_list(cls, proxies, proxy_type):
-        return map(lambda proxy: {'type': proxy_type, 'proxy': proxy}, proxies)
-
     def __start_check(self):
         with self.__thread_pool:
-            for proxy in self.__proxies:
+            for proxy in self.__proxy_storage.proxies:
                 self.__futures.append(self.__thread_pool.submit(self.__check_proxy, proxy))
 
-    def __check_proxy(self, proxy):
+    def __check_proxy(self, proxy: Proxy):
         if Request(url=self.__url, proxy=proxy, timeout=self.__timeout).do_request():
-            self.__statistics.increase_good(proxy['type'])
+            self.__statistics.increase_good(proxy.proxy_type)
             self.__write_to_file(proxy)
         else:
             self.__statistics.increase_bad()
         self.__statistics.increase_passed()
 
-    def __write_to_file(self, proxy):
-        with open("{project_path}\{proxy_type}.txt".format(project_path=self.project_path, proxy_type=proxy['type']),
+    def __write_to_file(self, proxy: Proxy):
+        with open("{project_path}\{proxy_type}.txt".format(project_path=self.project_path, proxy_type=proxy.proxy_type),
                   "a") as proxy_file:
-            proxy_file.write(proxy['proxy'])
+            proxy_file.write(str(proxy))
             proxy_file.write("\n")
 
     def run(self):

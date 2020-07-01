@@ -3,13 +3,12 @@ import requests
 from requests import ConnectTimeout, ReadTimeout, ConnectionError
 from requests.exceptions import ProxyError, ChunkedEncodingError, MissingSchema
 
+from lib.proxy.proxy import Proxy, ProxyNullObject
+
 
 class Request:
-    def __init__(self, url, proxy=None, timeout=3):
-        if proxy:
-            self.__proxy = self.__proxy_to_http_protocols_hash(proxy)
-        else:
-            self.__proxy = proxy
+    def __init__(self, url, proxy: Proxy=ProxyNullObject(), timeout=3):
+        self.__proxy = proxy.to_http_protocols()
         self.__url = url
         self.__timeout = timeout
         self.__headers = {
@@ -31,10 +30,3 @@ class Request:
             return False
         except MissingSchema as _e:
             return False
-
-    @classmethod
-    def __proxy_to_http_protocols_hash(cls, proxy):
-        return {
-            'http': '{}://{}'.format(proxy['type'], proxy["proxy"]),
-            'https': '{}://{}'.format(proxy['type'], proxy["proxy"])
-        }

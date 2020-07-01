@@ -31,9 +31,9 @@ class MainWindow(QMainWindow):
         self.connect(main_window_ui.reset_button, SIGNAL("clicked()"), self.reset)
         self.connect(main_window_ui.home_directory, SIGNAL("triggered()"), self.open_home_directory)
         self.__proxy_storage.update_statistics_signal.connect(self.update_import_statistics)
-        self.main_window_ui.import_http.signals.file_dropped.connect(self.import_http_form_drag_and_drop)
-        self.main_window_ui.import_socks4.signals.file_dropped.connect(self.import_socks4_form_drag_and_drop)
-        self.main_window_ui.import_socks5.signals.file_dropped.connect(self.import_socks5_form_drag_and_drop)
+        self.main_window_ui.import_http.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
+        self.main_window_ui.import_socks4.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
+        self.main_window_ui.import_socks5.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
 
     @Slot()
     def open_home_directory(self):
@@ -55,34 +55,27 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def import_http_form_file(self):
-        self.__proxy_storage.import_http(file=self.__open_proxy_file_dialog())
+        for file_path in self.__open_proxy_file_dialog():
+            self.__proxy_storage.import_from_file(file_path, 'http')
 
     @Slot()
     def import_socks4_form_file(self):
-        self.__proxy_storage.import_socks4(file=self.__open_proxy_file_dialog())
+        for file_path in self.__open_proxy_file_dialog():
+            self.__proxy_storage.import_from_file(file_path, 'socks4')
 
     @Slot()
     def import_socks5_form_file(self):
-        self.__proxy_storage.import_socks5(file=self.__open_proxy_file_dialog())
+        for file_path in self.__open_proxy_file_dialog():
+            self.__proxy_storage.import_from_file(file_path, 'socks5')
 
     def __open_proxy_file_dialog(self):
         file_name = QFileDialog.getOpenFileName(self, dir=self.tr("./"), filter=self.tr("*.txt"))
         if file_name[0]:
-            return file_name[0]
-        else:
-            return None
+            yield file_name[0]
 
-    @Slot(object)
-    def import_http_form_drag_and_drop(self, proxy_file):
-        self.__proxy_storage.import_http(file=proxy_file)
-
-    @Slot(object)
-    def import_socks4_form_drag_and_drop(self, proxy_file):
-        self.__proxy_storage.import_socks4(file=proxy_file)
-
-    @Slot(object)
-    def import_socks5_form_drag_and_drop(self, proxy_file):
-        self.__proxy_storage.import_socks5(file=proxy_file)
+    @Slot(str, str)
+    def import_proxy_form_drag_and_drop(self, file_path, proxy_type):
+        self.__proxy_storage.import_from_file(file_path, proxy_type)
 
     @Slot(object)
     def update_import_statistics(self, storage: ProxyStorage):
@@ -93,8 +86,8 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def start_check(self):
-        if self.__proxy_storage.empty():
-            QMessageBox.information(self, "Information", "Proxies don't loaded")
+        if self.__proxy_storage.is_empty():
+            QMessageBox.information(self, "Information", "Proxies are not loaded")
             return
         if self.threads() > self.__proxy_storage.total():
             self.set_threads(self.__proxy_storage.total())

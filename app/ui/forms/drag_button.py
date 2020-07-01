@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QPushButton
 
 
 class DragButtonSignals(QObject):
-    file_dropped = Signal(set)
+    file_dropped = Signal(str, str)
 
 
 class DragButton(QPushButton):
@@ -21,5 +21,5 @@ class DragButton(QPushButton):
             e.ignore()
 
     def dropEvent(self, e: QDropEvent):
-        self.signals.file_dropped.emit(e.mimeData().text().replace("file:///", ''))
+        self.signals.file_dropped.emit(e.mimeData().text().replace("file:///", ''), self.text())
 
