@@ -4,7 +4,7 @@ Main window of the app
 """
 import os
 
-from PySide2.QtCore import Slot, SIGNAL
+from PySide2.QtCore import Slot, SIGNAL, QThread
 from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
 from lib.proxy_checker.proxy_checker import ProxyChecker
@@ -92,16 +92,31 @@ class MainWindow(QMainWindow):
         if self.threads() > self.__proxy_storage.total():
             self.set_threads(self.__proxy_storage.total())
         self.__set_start_mode(True)
-        self.__proxy_checker = ProxyChecker(
-            self.__proxy_storage,
-            url=self.__get_url(),
-            timeout=self.__timeout(),
-            threads=self.threads()
-        )
+
+        self.__proxy_checker = self.init_proxy_checker()
         self.update_progress_statistics(self.__proxy_checker.statistics)
-        self.__proxy_checker.statistics.update_statistics_signal.connect(self.update_progress_statistics)
-        self.__proxy_checker.signals.done_signal.connect(self.done_check)
-        self.__proxy_checker.start()
+
+        self.thread = QThread()
+        self.__proxy_checker.moveToThread(self.thread)
+        self.thread.started.connect(self.__proxy_checker.run)
+        self.thread.start()
+
+    def init_proxy_checker(self):
+        proxy_checker = ProxyChecker(self.__proxy_storage, self.__get_url(), self.__timeout(), self.threads())
+        proxy_checker.statistics.update_statistics_signal.connect(self.update_progress_statistics)
+        proxy_checker.signals.done_signal.connect(self.done_check)
+        return proxy_checker
+
+    @Slot()
+    def done_check(self):
+        self.__set_start_mode(False)
+        self.__proxy_checker.signals.done_signal.disconnect()
+        self.thread.terminate()
+
+    @Slot()
+    def stop_check(self):
+        self.main_window_ui.stop_btn.setEnabled(False)
+        self.__proxy_checker.stop()
 
     def __timeout(self):
         return int(self.main_window_ui.timeout.text())
@@ -129,16 +144,6 @@ class MainWindow(QMainWindow):
             str(statistics.passed()),
             str(statistics.total())
         ))
-
-    @Slot()
-    def done_check(self):
-        self.__set_start_mode(False)
-
-    @Slot()
-    def stop_check(self):
-        self.main_window_ui.stop_btn.setEnabled(False)
-        self.__proxy_checker.stop()
-        self.__set_start_mode(False)
 
     def __get_url(self):
         return self.main_window_ui.url_field.text()
