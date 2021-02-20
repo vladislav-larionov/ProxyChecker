@@ -8,7 +8,6 @@ from PySide2.QtCore import Slot, QThread
 from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
 from app.lib.proxy_checker.proxy_checker import ProxyChecker
-from app.lib.proxy_checker.statistics.proxy_checker_statistics import ProxyCheckerStatistics
 
 from app.lib.proxy_storage.proxy_storage import ProxyStorage
 from app.ui.forms.main_window_form import Ui_MainWindow
@@ -100,7 +99,8 @@ class MainWindow(QMainWindow):
             return
         self.__set_start_mode(True)
         self.__proxy_checker = self.init_proxy_checker()
-        self.update_progress_statistics(self.__proxy_checker.statistics)
+        self.__proxy_checker.statistics.emit_update_statistics_signal()
+        # self.ui.statistics_widget.update_progress_statistics(self.__proxy_checker.statistics)
         self.proxy_checker_thread = QThread()
         self.__proxy_checker.moveToThread(self.proxy_checker_thread)
         self.proxy_checker_thread.started.connect(self.__proxy_checker.run)
@@ -108,7 +108,7 @@ class MainWindow(QMainWindow):
 
     def init_proxy_checker(self):
         proxy_checker = ProxyChecker(self.__proxy_storage, self.url, self.timeout, self.threads)
-        proxy_checker.statistics.update_statistics_signal.connect(self.update_progress_statistics)
+        self.ui.statistics_widget.statistics = proxy_checker.statistics
         proxy_checker.signals.done_signal.connect(self.done_check)
         return proxy_checker
 
@@ -135,24 +135,6 @@ class MainWindow(QMainWindow):
     def threads(self, threads):
         self.ui.thread_count.setValue(threads)
 
-    @Slot(object)
-    def update_progress_statistics(self, statistics: ProxyCheckerStatistics):
-        self.ui.good_http.setText(str(statistics.good_http()))
-        self.ui.good_socks4.setText(str(statistics.good_socks4()))
-        self.ui.good_socks5.setText(str(statistics.good_socks5()))
-        self.ui.total_bad_proxy.setText(str(statistics.bad_proxy()))
-        self.ui.total_good_proxy.setText(str(statistics.good_proxy()))
-        self.update_progress_bar(statistics)
-
-    def update_progress_bar(self, statistics: ProxyCheckerStatistics):
-        self.ui.progressBar.setMaximum(statistics.total())
-        self.ui.progressBar.setValue(statistics.passed())
-        self.ui.progressBar.setFormat('{}% ({} / {})'.format(
-            str(statistics.progress_in_percent()),
-            str(statistics.passed()),
-            str(statistics.total())
-        ))
-
     @property
     def url(self):
         return self.ui.url_field.text()
@@ -175,7 +157,4 @@ class MainWindow(QMainWindow):
     def reset(self):
         self.__proxy_checker = None
         self.__proxy_storage.clear()
-        self.update_progress_statistics(ProxyCheckerStatistics())
-        self.ui.progressBar.setFormat("0%")
-        self.ui.progressBar.setValue(0)
-        self.ui.progressBar.setMaximum(1)
+        self.ui.statistics_widget.clear_statistics()

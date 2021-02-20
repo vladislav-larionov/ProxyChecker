@@ -16,8 +16,8 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 
 from .drag_button import DragButton
+from .components.statistics_widget import StatisticsWidget
 
-from  . import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -37,9 +37,7 @@ class Ui_MainWindow(object):
         MainWindow.setAutoFillBackground(False)
         self.home_directory = QAction(MainWindow)
         self.home_directory.setObjectName(u"home_directory")
-        icon = QIcon()
-        icon.addFile(u":/resources/resources/Folder.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.home_directory.setIcon(icon)
+        self.home_directory.setIconVisibleInMenu(False)
         self.main_widget = QWidget(MainWindow)
         self.main_widget.setObjectName(u"main_widget")
         self.layoutWidget1 = QWidget(self.main_widget)
@@ -57,42 +55,6 @@ class Ui_MainWindow(object):
         self.url.setObjectName(u"url")
 
         self.url_setting.addWidget(self.url)
-
-        self.layoutWidget4 = QWidget(self.main_widget)
-        self.layoutWidget4.setObjectName(u"layoutWidget4")
-        self.layoutWidget4.setGeometry(QRect(270, 120, 151, 91))
-        self.statistic = QGridLayout(self.layoutWidget4)
-        self.statistic.setObjectName(u"statistic")
-        self.statistic.setContentsMargins(0, 0, 0, 0)
-        self.good_socks5 = QLabel(self.layoutWidget4)
-        self.good_socks5.setObjectName(u"good_socks5")
-
-        self.statistic.addWidget(self.good_socks5, 2, 1, 1, 1)
-
-        self.good_socks4 = QLabel(self.layoutWidget4)
-        self.good_socks4.setObjectName(u"good_socks4")
-
-        self.statistic.addWidget(self.good_socks4, 1, 1, 1, 1)
-
-        self.good_http = QLabel(self.layoutWidget4)
-        self.good_http.setObjectName(u"good_http")
-
-        self.statistic.addWidget(self.good_http, 0, 1, 1, 1)
-
-        self.label = QLabel(self.layoutWidget4)
-        self.label.setObjectName(u"label")
-
-        self.statistic.addWidget(self.label, 0, 2, 1, 1)
-
-        self.label_2 = QLabel(self.layoutWidget4)
-        self.label_2.setObjectName(u"label_2")
-
-        self.statistic.addWidget(self.label_2, 1, 2, 1, 1)
-
-        self.label_3 = QLabel(self.layoutWidget4)
-        self.label_3.setObjectName(u"label_3")
-
-        self.statistic.addWidget(self.label_3, 2, 2, 1, 1)
 
         self.import_socks5 = DragButton(self.main_widget)
         self.import_socks5.setObjectName(u"import_socks5")
@@ -151,28 +113,6 @@ class Ui_MainWindow(object):
         self.import_http = DragButton(self.main_widget)
         self.import_http.setObjectName(u"import_http")
         self.import_http.setGeometry(QRect(20, 130, 91, 23))
-        self.total_proxy_count_label = QLabel(self.main_widget)
-        self.total_proxy_count_label.setObjectName(u"total_proxy_count_label")
-        self.total_proxy_count_label.setGeometry(QRect(270, 60, 47, 13))
-        self.label_5 = QLabel(self.main_widget)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setGeometry(QRect(270, 80, 47, 13))
-        self.label_6 = QLabel(self.main_widget)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setGeometry(QRect(270, 100, 47, 13))
-        self.progressBar = QProgressBar(self.main_widget)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setEnabled(False)
-        self.progressBar.setGeometry(QRect(270, 220, 151, 23))
-        self.progressBar.setLayoutDirection(Qt.LeftToRight)
-        self.progressBar.setAutoFillBackground(False)
-        self.progressBar.setMinimum(0)
-        self.progressBar.setMaximum(15000)
-        self.progressBar.setValue(0)
-        self.progressBar.setAlignment(Qt.AlignCenter)
-        self.progressBar.setTextVisible(True)
-        self.progressBar.setOrientation(Qt.Horizontal)
-        self.progressBar.setInvertedAppearance(False)
         self.layoutWidget = QWidget(self.main_widget)
         self.layoutWidget.setObjectName(u"layoutWidget")
         self.layoutWidget.setGeometry(QRect(20, 60, 191, 61))
@@ -238,27 +178,102 @@ class Ui_MainWindow(object):
 
         self.settings_layout.addWidget(self.thread_count)
 
-        self.total_proxy_loaded = QLabel(self.main_widget)
-        self.total_proxy_loaded.setObjectName(u"total_proxy_loaded")
-        self.total_proxy_loaded.setGeometry(QRect(340, 60, 47, 13))
-        self.total_proxy_loaded.setAlignment(Qt.AlignCenter)
-        self.total_bad_proxy = QLabel(self.main_widget)
-        self.total_bad_proxy.setObjectName(u"total_bad_proxy")
-        self.total_bad_proxy.setGeometry(QRect(340, 80, 47, 13))
-        self.total_bad_proxy.setAlignment(Qt.AlignCenter)
-        self.total_good_proxy = QLabel(self.main_widget)
+        self.statistics_widget = StatisticsWidget(self.main_widget)
+        self.statistics_widget.setObjectName(u"statistics_widget")
+        self.statistics_widget.setGeometry(QRect(250, 50, 181, 201))
+        self.gridLayout = QGridLayout(self.statistics_widget)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.good_http = QLabel(self.statistics_widget)
+        self.good_http.setObjectName(u"good_http")
+        self.good_http.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.good_http, 3, 1, 1, 1)
+
+        self.total_good_proxy = QLabel(self.statistics_widget)
         self.total_good_proxy.setObjectName(u"total_good_proxy")
-        self.total_good_proxy.setGeometry(QRect(340, 100, 47, 13))
         self.total_good_proxy.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.total_good_proxy, 2, 1, 1, 1)
+
+        self.total_bad_proxy = QLabel(self.statistics_widget)
+        self.total_bad_proxy.setObjectName(u"total_bad_proxy")
+        self.total_bad_proxy.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.total_bad_proxy, 1, 1, 1, 1)
+
+        self.total_proxy_loaded = QLabel(self.statistics_widget)
+        self.total_proxy_loaded.setObjectName(u"total_proxy_loaded")
+        self.total_proxy_loaded.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.total_proxy_loaded, 0, 1, 1, 1)
+
+        self.progressBar = QProgressBar(self.statistics_widget)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setEnabled(False)
+        self.progressBar.setLayoutDirection(Qt.LeftToRight)
+        self.progressBar.setAutoFillBackground(False)
+        self.progressBar.setMinimum(0)
+        self.progressBar.setMaximum(15000)
+        self.progressBar.setValue(0)
+        self.progressBar.setAlignment(Qt.AlignCenter)
+        self.progressBar.setTextVisible(True)
+        self.progressBar.setOrientation(Qt.Horizontal)
+        self.progressBar.setInvertedAppearance(False)
+
+        self.gridLayout.addWidget(self.progressBar, 6, 1, 1, 2)
+
+        self.good_count_label = QLabel(self.statistics_widget)
+        self.good_count_label.setObjectName(u"good_count_label")
+
+        self.gridLayout.addWidget(self.good_count_label, 2, 2, 1, 1)
+
+        self.total_proxy_count_label = QLabel(self.statistics_widget)
+        self.total_proxy_count_label.setObjectName(u"total_proxy_count_label")
+
+        self.gridLayout.addWidget(self.total_proxy_count_label, 0, 2, 1, 1)
+
+        self.bad_count_label = QLabel(self.statistics_widget)
+        self.bad_count_label.setObjectName(u"bad_count_label")
+
+        self.gridLayout.addWidget(self.bad_count_label, 1, 2, 1, 1)
+
+        self.good_socks4 = QLabel(self.statistics_widget)
+        self.good_socks4.setObjectName(u"good_socks4")
+        self.good_socks4.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.good_socks4, 4, 1, 1, 1)
+
+        self.socks4_label = QLabel(self.statistics_widget)
+        self.socks4_label.setObjectName(u"socks4_label")
+
+        self.gridLayout.addWidget(self.socks4_label, 4, 2, 1, 1)
+
+        self.http_label = QLabel(self.statistics_widget)
+        self.http_label.setObjectName(u"http_label")
+
+        self.gridLayout.addWidget(self.http_label, 3, 2, 1, 1)
+
+        self.good_socks5 = QLabel(self.statistics_widget)
+        self.good_socks5.setObjectName(u"good_socks5")
+        self.good_socks5.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.good_socks5, 5, 1, 1, 1)
+
+        self.socks5_label = QLabel(self.statistics_widget)
+        self.socks5_label.setObjectName(u"socks5_label")
+
+        self.gridLayout.addWidget(self.socks5_label, 5, 2, 1, 1)
+
         MainWindow.setCentralWidget(self.main_widget)
         self.toolBar = QToolBar(MainWindow)
         self.toolBar.setObjectName(u"toolBar")
         self.toolBar.setEnabled(True)
+        self.toolBar.setLayoutDirection(Qt.LeftToRight)
         self.toolBar.setAutoFillBackground(True)
         self.toolBar.setMovable(False)
         self.toolBar.setAllowedAreas(Qt.AllToolBarAreas)
         self.toolBar.setOrientation(Qt.Horizontal)
-        self.toolBar.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        self.toolBar.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.toolBar.setFloatable(True)
         MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar)
 
@@ -272,14 +287,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"ProxyChecker", None))
         self.home_directory.setText(QCoreApplication.translate("MainWindow", u"Home directory", None))
+        self.home_directory.setIconText(QCoreApplication.translate("MainWindow", u"Home directory", None))
         self.url_field.setText(QCoreApplication.translate("MainWindow", u"https://mail.ru", None))
         self.url.setText(QCoreApplication.translate("MainWindow", u"URL:", None))
-        self.good_socks5.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.good_socks4.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.good_http.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"HTTP:", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"SOCKS4:", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"SOCKS5:", None))
         self.import_socks5.setText(QCoreApplication.translate("MainWindow", u"SOCKS5", None))
         self.socks5_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.clear_socks5.setText(QCoreApplication.translate("MainWindow", u"X", None))
@@ -289,16 +299,22 @@ class Ui_MainWindow(object):
         self.clear_http.setText(QCoreApplication.translate("MainWindow", u"X", None))
         self.http_count.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.import_http.setText(QCoreApplication.translate("MainWindow", u"HTTP", None))
-        self.total_proxy_count_label.setText(QCoreApplication.translate("MainWindow", u"Loaded:", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Bad:", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Good:", None))
-        self.progressBar.setFormat(QCoreApplication.translate("MainWindow", u"%p%", None))
         self.start_btn.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.reset_button.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
         self.stop_btn.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
-        self.total_proxy_loaded.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.total_bad_proxy.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.good_http.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.total_good_proxy.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.total_bad_proxy.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.total_proxy_loaded.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.progressBar.setFormat(QCoreApplication.translate("MainWindow", u"%p%", None))
+        self.good_count_label.setText(QCoreApplication.translate("MainWindow", u"Good:", None))
+        self.total_proxy_count_label.setText(QCoreApplication.translate("MainWindow", u"Loaded:", None))
+        self.bad_count_label.setText(QCoreApplication.translate("MainWindow", u"Bad:", None))
+        self.good_socks4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.socks4_label.setText(QCoreApplication.translate("MainWindow", u"SOCKS4:", None))
+        self.http_label.setText(QCoreApplication.translate("MainWindow", u"HTTP:", None))
+        self.good_socks5.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.socks5_label.setText(QCoreApplication.translate("MainWindow", u"SOCKS5:", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 
