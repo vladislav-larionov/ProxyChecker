@@ -15,7 +15,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 
-from ui.forms.drag_button import DragButton
+from .drag_button import DragButton
 
 from  . import resources_rc
 

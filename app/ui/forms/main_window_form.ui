@@ -635,7 +635,7 @@
   <customwidget>
    <class>DragButton</class>
    <extends>QPushButton</extends>
-   <header>ui/forms/drag_button</header>
+   <header>.drag_button</header>
   </customwidget>
  </customwidgets>
  <resources>
