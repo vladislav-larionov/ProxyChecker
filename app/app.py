@@ -4,7 +4,7 @@ Main window of the app
 """
 import os
 
-from PySide2.QtCore import Slot, SIGNAL, QThread
+from PySide2.QtCore import Slot, QThread
 from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
 from app.lib.proxy_checker.proxy_checker import ProxyChecker
@@ -19,22 +19,22 @@ class MainWindow(QMainWindow):
     Class that describes main window of the app
     """
 
-    def signals(self, main_window_ui):
+    def signals(self):
         """ Connect signals from ui """
-        self.connect(main_window_ui.import_http, SIGNAL("clicked()"), self.import_http_form_file)
-        self.connect(main_window_ui.import_socks4, SIGNAL("clicked()"), self.import_socks4_form_file)
-        self.connect(main_window_ui.import_socks5, SIGNAL("clicked()"), self.import_socks5_form_file)
-        self.connect(main_window_ui.clear_http, SIGNAL("clicked()"), self.__proxy_storage.clear_http)
-        self.connect(main_window_ui.clear_socks4, SIGNAL("clicked()"), self.__proxy_storage.clear_socks4)
-        self.connect(main_window_ui.clear_socks5, SIGNAL("clicked()"), self.__proxy_storage.clear_socks5)
-        self.connect(main_window_ui.start_btn, SIGNAL("clicked()"), self.start_check)
-        self.connect(main_window_ui.stop_btn, SIGNAL("clicked()"), self.stop_check)
-        self.connect(main_window_ui.reset_button, SIGNAL("clicked()"), self.reset)
-        self.connect(main_window_ui.home_directory, SIGNAL("triggered()"), self.open_home_directory)
+        self.ui.import_http.clicked.connect(self.import_http_form_file)
+        self.ui.import_socks4.clicked.connect(self.import_socks4_form_file)
+        self.ui.import_socks5.clicked.connect(self.import_socks5_form_file)
+        self.ui.clear_http.clicked.connect(self.__proxy_storage.clear_http)
+        self.ui.clear_socks4.clicked.connect(self.__proxy_storage.clear_socks4)
+        self.ui.clear_socks5.clicked.connect(self.__proxy_storage.clear_socks5)
+        self.ui.start_btn.clicked.connect(self.start_check)
+        self.ui.stop_btn.clicked.connect(self.stop_check)
+        self.ui.reset_button.clicked.connect(self.reset)
+        self.ui.home_directory.triggered.connect(self.open_home_directory)
         self.__proxy_storage.update_statistics_signal.connect(self.update_import_statistics)
-        self.main_window_ui.import_http.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
-        self.main_window_ui.import_socks4.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
-        self.main_window_ui.import_socks5.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
+        self.ui.import_http.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
+        self.ui.import_socks4.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
+        self.ui.import_socks5.signals.file_dropped.connect(self.import_proxy_form_drag_and_drop)
 
     @Slot()
     def open_home_directory(self):
@@ -46,13 +46,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         """ Constructor of widget """
         main_window = QMainWindow()
-        self.main_window_ui = Ui_MainWindow()
-        self.main_window_ui.setupUi(main_window)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(main_window)
         QMainWindow.__init__(self)
-        Ui_MainWindow.setupUi(self.main_window_ui, self)
+        Ui_MainWindow.setupUi(self.ui, self)
         self.__proxy_storage = ProxyStorage()
         self.__proxy_checker = None
-        self.signals(self.main_window_ui)
+        self.signals()
 
     @Slot()
     def import_http_form_file(self):
@@ -80,10 +80,10 @@ class MainWindow(QMainWindow):
 
     @Slot(object)
     def update_import_statistics(self, storage: ProxyStorage):
-        self.main_window_ui.http_count.setText(str(storage.total_http()))
-        self.main_window_ui.socks4_count.setText(str(storage.total_socks4()))
-        self.main_window_ui.socks5_count.setText(str(storage.total_socks5()))
-        self.main_window_ui.total_proxy_loaded.setText(str(storage.total()))
+        self.ui.http_count.setText(str(storage.total_http()))
+        self.ui.socks4_count.setText(str(storage.total_socks4()))
+        self.ui.socks5_count.setText(str(storage.total_socks5()))
+        self.ui.total_proxy_loaded.setText(str(storage.total()))
 
     @Slot()
     def start_check(self):
@@ -116,60 +116,60 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def stop_check(self):
-        self.main_window_ui.stop_btn.setEnabled(False)
+        self.ui.stop_btn.setEnabled(False)
         self.__proxy_checker.stop()
 
     def __timeout(self):
-        return int(self.main_window_ui.timeout.text())
+        return int(self.ui.timeout.text())
 
     def threads(self):
-        return self.main_window_ui.thread_count.value()
+        return self.ui.thread_count.value()
 
     def set_threads(self, threads):
-        self.main_window_ui.thread_count.setValue(threads)
+        self.ui.thread_count.setValue(threads)
 
     @Slot(object)
     def update_progress_statistics(self, statistics: ProxyCheckerStatistics):
-        self.main_window_ui.good_http.setText(str(statistics.good_http()))
-        self.main_window_ui.good_socks4.setText(str(statistics.good_socks4()))
-        self.main_window_ui.good_socks5.setText(str(statistics.good_socks5()))
-        self.main_window_ui.total_bad_proxy.setText(str(statistics.bad_proxy()))
-        self.main_window_ui.total_good_proxy.setText(str(statistics.good_proxy()))
+        self.ui.good_http.setText(str(statistics.good_http()))
+        self.ui.good_socks4.setText(str(statistics.good_socks4()))
+        self.ui.good_socks5.setText(str(statistics.good_socks5()))
+        self.ui.total_bad_proxy.setText(str(statistics.bad_proxy()))
+        self.ui.total_good_proxy.setText(str(statistics.good_proxy()))
         self.update_progress_bar(statistics)
 
     def update_progress_bar(self, statistics: ProxyCheckerStatistics):
-        self.main_window_ui.progressBar.setMaximum(statistics.total())
-        self.main_window_ui.progressBar.setValue(statistics.passed())
-        self.main_window_ui.progressBar.setFormat('{}% ({} / {})'.format(
+        self.ui.progressBar.setMaximum(statistics.total())
+        self.ui.progressBar.setValue(statistics.passed())
+        self.ui.progressBar.setFormat('{}% ({} / {})'.format(
             str(statistics.progress_in_percent()),
             str(statistics.passed()),
             str(statistics.total())
         ))
 
     def __get_url(self):
-        return self.main_window_ui.url_field.text()
+        return self.ui.url_field.text()
 
     def __set_start_mode(self, value: bool):
-        self.main_window_ui.start_btn.setEnabled(not value)
-        self.main_window_ui.stop_btn.setEnabled(value)
-        self.main_window_ui.import_http.setEnabled(not value)
-        self.main_window_ui.import_socks4.setEnabled(not value)
-        self.main_window_ui.import_socks5.setEnabled(not value)
-        self.main_window_ui.clear_http.setEnabled(not value)
-        self.main_window_ui.clear_socks4.setEnabled(not value)
-        self.main_window_ui.clear_socks5.setEnabled(not value)
-        self.main_window_ui.reset_button.setEnabled(not value)
-        self.main_window_ui.timeout.setEnabled(not value)
-        self.main_window_ui.thread_count.setEnabled(not value)
-        self.main_window_ui.url_field.setEnabled(not value)
+        self.ui.start_btn.setEnabled(not value)
+        self.ui.stop_btn.setEnabled(value)
+        self.ui.import_http.setEnabled(not value)
+        self.ui.import_socks4.setEnabled(not value)
+        self.ui.import_socks5.setEnabled(not value)
+        self.ui.clear_http.setEnabled(not value)
+        self.ui.clear_socks4.setEnabled(not value)
+        self.ui.clear_socks5.setEnabled(not value)
+        self.ui.reset_button.setEnabled(not value)
+        self.ui.timeout.setEnabled(not value)
+        self.ui.thread_count.setEnabled(not value)
+        self.ui.url_field.setEnabled(not value)
 
     @Slot()
     def reset(self):
         self.__proxy_checker = None
         self.__proxy_storage.clear()
         self.update_progress_statistics(ProxyCheckerStatistics())
-        self.main_window_ui.progressBar.setFormat("0%")
-        self.main_window_ui.progressBar.setValue(0)
-        self.main_window_ui.progressBar.setMaximum(1)
+        self.ui.progressBar.setFormat("0%")
+        self.ui.progressBar.setValue(0)
+        self.ui.progressBar.setMaximum(1)
 
 
