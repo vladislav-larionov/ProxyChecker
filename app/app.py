@@ -52,6 +52,7 @@ class MainWindow(QMainWindow):
         Ui_MainWindow.setupUi(self.ui, self)
         self.__proxy_storage = ProxyStorage()
         self.__proxy_checker = None
+        self.proxy_checker_thread = None
         self.signals()
 
     @Slot()
@@ -85,25 +86,28 @@ class MainWindow(QMainWindow):
         self.ui.socks5_count.setText(str(storage.total_socks5()))
         self.ui.total_proxy_loaded.setText(str(storage.total()))
 
-    @Slot()
-    def start_check(self):
+    def __settings_are_valid(self):
         if self.__proxy_storage.is_empty():
             QMessageBox.information(self, "Information", "Proxies are not loaded")
-            return
-        if self.threads() > self.__proxy_storage.total():
-            self.set_threads(self.__proxy_storage.total())
-        self.__set_start_mode(True)
+            return False
+        if self.threads > self.__proxy_storage.total():
+            self.threads = self.__proxy_storage.total()
+        return True
 
+    @Slot()
+    def start_check(self):
+        if not self.__settings_are_valid():
+            return
+        self.__set_start_mode(True)
         self.__proxy_checker = self.init_proxy_checker()
         self.update_progress_statistics(self.__proxy_checker.statistics)
-
-        self.thread = QThread()
-        self.__proxy_checker.moveToThread(self.thread)
-        self.thread.started.connect(self.__proxy_checker.run)
-        self.thread.start()
+        self.proxy_checker_thread = QThread()
+        self.__proxy_checker.moveToThread(self.proxy_checker_thread)
+        self.proxy_checker_thread.started.connect(self.__proxy_checker.run)
+        self.proxy_checker_thread.start()
 
     def init_proxy_checker(self):
-        proxy_checker = ProxyChecker(self.__proxy_storage, self.__get_url(), self.__timeout(), self.threads())
+        proxy_checker = ProxyChecker(self.__proxy_storage, self.url, self.timeout, self.threads)
         proxy_checker.statistics.update_statistics_signal.connect(self.update_progress_statistics)
         proxy_checker.signals.done_signal.connect(self.done_check)
         return proxy_checker
@@ -112,20 +116,23 @@ class MainWindow(QMainWindow):
     def done_check(self):
         self.__set_start_mode(False)
         self.__proxy_checker.signals.done_signal.disconnect()
-        self.thread.terminate()
+        self.proxy_checker_thread.terminate()
 
     @Slot()
     def stop_check(self):
         self.ui.stop_btn.setEnabled(False)
         self.__proxy_checker.stop()
 
-    def __timeout(self):
+    @property
+    def timeout(self):
         return int(self.ui.timeout.text())
 
+    @property
     def threads(self):
         return self.ui.thread_count.value()
 
-    def set_threads(self, threads):
+    @threads.setter
+    def threads(self, threads):
         self.ui.thread_count.setValue(threads)
 
     @Slot(object)
@@ -146,7 +153,8 @@ class MainWindow(QMainWindow):
             str(statistics.total())
         ))
 
-    def __get_url(self):
+    @property
+    def url(self):
         return self.ui.url_field.text()
 
     def __set_start_mode(self, value: bool):
@@ -171,5 +179,3 @@ class MainWindow(QMainWindow):
         self.ui.progressBar.setFormat("0%")
         self.ui.progressBar.setValue(0)
         self.ui.progressBar.setMaximum(1)
-
-
