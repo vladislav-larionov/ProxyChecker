@@ -1,8 +1,8 @@
 from PySide2.QtCore import QThread, QObject, Signal
 
-from lib.proxy.proxy import Proxy
-from lib.proxy_checker.data_storage import DataStorage
-from lib.proxy_checker.request import Request
+from app.lib.proxy.proxy import Proxy
+from app.lib.proxy_checker.data_storage import DataStorage
+from app.lib.proxy_checker.request import Request
 
 
 class Signals(QObject):

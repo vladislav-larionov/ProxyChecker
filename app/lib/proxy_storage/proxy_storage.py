@@ -1,6 +1,6 @@
 from PySide2.QtCore import QObject, Signal, Slot
 
-from lib.proxy.proxy import Proxy
+from app.lib.proxy.proxy import Proxy
 
 
 class ProxyStorage(QObject):

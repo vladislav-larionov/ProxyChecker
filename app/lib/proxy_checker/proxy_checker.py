@@ -1,12 +1,13 @@
 
 from PySide2.QtCore import QObject, Signal, Slot
 
-from lib.proxy_checker.ThreadPool import ThreadPool
-from lib.proxy_checker.check_thread import CheckThread
-from lib.proxy_checker.data_storage import DataStorage
-from lib.proxy_checker.project import Project
-from lib.proxy_checker.proxy_checker_statistics import ProxyCheckerStatistics
-from lib.proxy_storage.proxy_storage import ProxyStorage
+from app.lib.proxy_checker.ThreadPool import ThreadPool
+from app.lib.proxy_checker.check_thread import CheckThread
+from app.lib.proxy_checker.data_storage import DataStorage
+from app.lib.proxy_checker.project import Project
+from app.lib.proxy_storage.proxy_storage import ProxyStorage
+
+from app.lib.proxy_checker.statistics.proxy_checker_statistics import ProxyCheckerStatistics
 
 
 class ProxyCheckerConnection(QObject):

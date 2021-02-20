@@ -7,10 +7,11 @@ import os
 from PySide2.QtCore import Slot, SIGNAL, QThread
 from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
-from lib.proxy_checker.proxy_checker import ProxyChecker
-from lib.proxy_checker.proxy_checker_statistics import ProxyCheckerStatistics
-from lib.proxy_storage.proxy_storage import ProxyStorage
-from ui.forms.main_window_form import Ui_MainWindow
+from app.lib.proxy_checker.proxy_checker import ProxyChecker
+from app.lib.proxy_checker.statistics.proxy_checker_statistics import ProxyCheckerStatistics
+
+from app.lib.proxy_storage.proxy_storage import ProxyStorage
+from app.ui.forms.main_window_form import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):

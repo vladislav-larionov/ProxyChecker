@@ -3,7 +3,7 @@ import requests
 from requests import ConnectTimeout, ReadTimeout, ConnectionError
 from requests.exceptions import ProxyError, ChunkedEncodingError, MissingSchema
 
-from lib.proxy.proxy import Proxy, ProxyNullObject
+from app.lib.proxy.proxy import Proxy, ProxyNullObject
 
 
 class Request:
