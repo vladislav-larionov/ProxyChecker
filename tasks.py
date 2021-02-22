@@ -40,4 +40,4 @@ def generate_exe(context):
     Generate exe file based on the app/main.py
     """
     os.chdir(os.getcwd())
-    context.run("pipenv run pyinstaller --onefile -w app/main.py --name {}".format("ProxyChecker"))
+    context.run("pipenv run pyinstaller --onefile -w main.py --name {}".format("ProxyChecker"))
