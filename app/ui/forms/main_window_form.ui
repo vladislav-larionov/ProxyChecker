@@ -593,10 +593,10 @@
   </widget>
   <action name="home_directory">
    <property name="text">
-    <string>Home directory</string>
+    <string>Project directory</string>
    </property>
    <property name="iconText">
-    <string>Home directory</string>
+    <string>Project directory</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>

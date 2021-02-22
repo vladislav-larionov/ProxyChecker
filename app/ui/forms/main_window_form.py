@@ -286,8 +286,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"ProxyChecker", None))
-        self.home_directory.setText(QCoreApplication.translate("MainWindow", u"Home directory", None))
-        self.home_directory.setIconText(QCoreApplication.translate("MainWindow", u"Home directory", None))
+        self.home_directory.setText(QCoreApplication.translate("MainWindow", u"Project directory", None))
+        self.home_directory.setIconText(QCoreApplication.translate("MainWindow", u"Project directory", None))
         self.url_field.setText(QCoreApplication.translate("MainWindow", u"https://mail.ru", None))
         self.url.setText(QCoreApplication.translate("MainWindow", u"URL:", None))
         self.import_socks5.setText(QCoreApplication.translate("MainWindow", u"SOCKS5", None))
