@@ -1,24 +1,24 @@
 from PySide2.QtCore import QObject, Signal, Slot
 
+from app.lib.proxy_checker.check_thread import CheckThread
+
 
 class ThreadPool(QObject):
     done_signal = Signal()
     stopped_signal = Signal()
 
-    def __init__(self, count):
+    def __init__(self):
         super().__init__()
-        self.thread_count = count
+        self.thread_count = 0
         self.threads = list()
         self.done = 0
 
-    def init_threads(self, constructor, *args, **kwargs):
-        for i in range(self.thread_count):
-            thread = constructor(*args, **kwargs)
-            yield thread
-            thread.signals.thread_done_signal.connect(self.on_done_signal)
-            self.threads.append(thread)
+    def add_thread(self, thread: CheckThread):
+        thread.signals.thread_done_signal.connect(self.on_done_signal)
+        self.threads.append(thread)
 
     def start(self):
+        self.thread_count = len(self.threads)
         for thread in self.threads:
             thread.start()
 
@@ -30,6 +30,5 @@ class ThreadPool(QObject):
 
     def stop(self):
         for thread in self.threads:
-            thread.revert_current_data()
-            thread.terminate()
+            thread.stop()
         self.stopped_signal.emit()

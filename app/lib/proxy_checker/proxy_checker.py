@@ -1,12 +1,13 @@
 
 from PySide2.QtCore import QObject, Signal, Slot
 
-from lib.proxy_checker.ThreadPool import ThreadPool
-from lib.proxy_checker.check_thread import CheckThread
-from lib.proxy_checker.data_storage import DataStorage
-from lib.proxy_checker.project import Project
-from lib.proxy_checker.proxy_checker_statistics import ProxyCheckerStatistics
-from lib.proxy_storage.proxy_storage import ProxyStorage
+from app.lib.proxy_checker.ThreadPool import ThreadPool
+from app.lib.proxy_checker.check_thread import CheckThread
+from app.lib.proxy_checker.data_storage import DataStorage
+from app.lib.proxy_checker.project.project import Project
+from app.lib.proxy_storage.proxy_storage import ProxyStorage
+
+from app.lib.proxy_checker.statistics.proxy_checker_statistics import ProxyCheckerStatistics
 
 
 class ProxyCheckerConnection(QObject):
@@ -23,12 +24,12 @@ class ProxyChecker(QObject):
         self.__storage = DataStorage(proxy_storage.proxies)
         self.__statistics = ProxyCheckerStatistics(proxy_storage.total())
         self.__project = Project()
-        self.thread_pool = ThreadPool(int(thread_count))
-        for thread in self.thread_pool.init_threads(CheckThread, self.__storage):
-            thread.url = url
-            thread.timeout = int(timeout)
+        self.thread_pool = ThreadPool()
+        for _i in range(thread_count):
+            thread = CheckThread(self.__storage, url, timeout)
             thread.signals.valid_signal.connect(self.on_valid_signal)
             thread.signals.invalid_signal.connect(self.on_invalid_signal)
+            self.thread_pool.add_thread(thread)
         self.thread_pool.done_signal.connect(self.on_done_signal)
 
     @property

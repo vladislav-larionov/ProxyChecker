@@ -60,3 +60,6 @@ class ProxyCheckerStatistics(QObject):
     def increase_passed(self):
         self.__passed += 1
         self.update_statistics_signal.emit(self)
+
+    def emit_update_statistics_signal(self):
+        self.update_statistics_signal.emit(self)

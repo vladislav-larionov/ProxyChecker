@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from os.path import normpath, join
 
-from lib.proxy.proxy import Proxy
+from app.lib.proxy.proxy import Proxy
 
 
 class Project:
