@@ -100,7 +100,6 @@ class MainWindow(QMainWindow):
         self.__set_start_mode(True)
         self.__proxy_checker = self.init_proxy_checker()
         self.__proxy_checker.statistics.emit_update_statistics_signal()
-        # self.ui.statistics_widget.update_progress_statistics(self.__proxy_checker.statistics)
         self.proxy_checker_thread = QThread()
         self.__proxy_checker.moveToThread(self.proxy_checker_thread)
         self.proxy_checker_thread.started.connect(self.__proxy_checker.run)
@@ -129,7 +128,7 @@ class MainWindow(QMainWindow):
 
     @property
     def threads(self):
-        return self.ui.thread_count.value()
+        return int(self.ui.thread_count.value())
 
     @threads.setter
     def threads(self, threads):

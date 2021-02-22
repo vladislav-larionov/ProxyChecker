@@ -10,7 +10,7 @@ class DataStorage:
         return len(self.data) != 0
 
     def add(self, data):
-        self.data.update(set(data))
+        self.data.add(data)
 
     def size(self):
         return len(self.data)

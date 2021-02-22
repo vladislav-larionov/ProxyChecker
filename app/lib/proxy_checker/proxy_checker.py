@@ -24,12 +24,12 @@ class ProxyChecker(QObject):
         self.__storage = DataStorage(proxy_storage.proxies)
         self.__statistics = ProxyCheckerStatistics(proxy_storage.total())
         self.__project = Project()
-        self.thread_pool = ThreadPool(int(thread_count))
-        for thread in self.thread_pool.init_threads(CheckThread, self.__storage):
-            thread.url = url
-            thread.timeout = int(timeout)
+        self.thread_pool = ThreadPool()
+        for _i in range(thread_count):
+            thread = CheckThread(self.__storage, url, timeout)
             thread.signals.valid_signal.connect(self.on_valid_signal)
             thread.signals.invalid_signal.connect(self.on_invalid_signal)
+            self.thread_pool.add_thread(thread)
         self.thread_pool.done_signal.connect(self.on_done_signal)
 
     @property
